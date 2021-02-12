@@ -1,0 +1,39 @@
+{
+    "metadonnees": [
+        {
+            "noeudId": "open-system",
+            "contenus": [
+                {
+                    "cible": "general",
+                    "metadonnee": {
+                        "widget": {
+                            "code": "ITEAG-ABCD-1234"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "noeudId": "test-pg",
+            "contenus": [
+                {
+                    "cible": "general",
+                    "metadonnee": {
+                        "id": "id-test-pg"
+                    }
+                }
+            ]
+        },
+        {
+            "noeudId": "tourinsoft",
+            "contenus": [
+                {
+                    "cible": "general",
+                    "metadonnee": {
+                        "id": "HLOAUV0030004797"
+                    }
+                }
+            ]
+        }
+    ]
+}
