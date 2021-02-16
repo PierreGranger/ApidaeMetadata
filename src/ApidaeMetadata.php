@@ -16,7 +16,7 @@
 		 * @var	string
 		 */
 		protected $clientId ;
-		/**
+		/** 
 		 * secret par défaut, fourni lors de l'implémentation de l'objet (new ...). S'il n'est pas renseigné il pourra être passé en paramètre des classes qui en ont besoin
 		 * 15 caractères alphanumériques. Ex : aOzHUt3H227zivv
 		 * @var	string
@@ -69,7 +69,7 @@
 			$body = substr($result, $header_size) ;
 
 			if ( $http_code != 200 ) throw new \Exception('Retour http incorrect',$http_code) ;
-			return result ;
+			return $result ;
 		}
 
 		/**
