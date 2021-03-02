@@ -18,17 +18,17 @@
         global $ApidaeMetadata, $mdCpt, $offre, $noeud ;
         $ApidaeMetadata->start('get '.$mdCpt) ;
         try { $metadonnee = $ApidaeMetadata->get($offre,$noeud) ; } catch ( \Exception $e ) { echo '<pre>'.print_r($e,true).'</pre>' ; }
-        echo '<pre>'.print_r($metadonnee,true).'</pre>' ;
+        echo '<pre style="background:#498248;color:white;">'.print_r($metadonnee,true).'</pre>' ;
         $ApidaeMetadata->stop('get '.$mdCpt++) ;
     }
 
+    echo '<h1>Valeur origine</h1>' ;
     showMd() ;
 
     $ApidaeMetadata->start('delete') ;
     echo '<h1>Delete...</h1>' ;
     $ApidaeMetadata->delete($offre,$noeud) ;
-    try { $metadonnee = $ApidaeMetadata->get($offre,$noeud) ; } catch ( \Exception $e ) { echo '<pre>'.print_r($e,true).'</pre>' ; }
-    echo '<pre>'.print_r($metadonnee,true).'</pre>' ;
+    showMd() ;
     $ApidaeMetadata->stop('delete') ;
 
     // Insert single

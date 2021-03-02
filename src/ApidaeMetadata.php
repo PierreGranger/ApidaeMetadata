@@ -43,33 +43,22 @@
 			$clientId = isset($params['clientId']) ? $params['clientId'] : $this->clientId ;
 			$secret = isset($params['secret']) ? $params['secret'] : $this->secret ;
 
-			if ( $clientId == null ) throw new \Exception(__LINE__.':clientId non renseigné') ;
-			if ( $secret == null ) throw new \Exception(__LINE__.':secret non renseigné') ;
+			if ( $clientId == null ) throw new ApidaeException('clientId non renseigné',ApidaeException::MISSING_PARAMETER) ;
+			if ( $secret == null ) throw new ApidaeException('secret non renseigné',ApidaeException::MISSING_PARAMETER) ;
 
 			$access_token = $this->gimme_token($clientId,$secret) ;
-			if ( ! $access_token ) throw new \Exception(__LINE__.'Impossible de récupérer le token d\'écriture') ;
+			if ( ! $access_token ) throw new ApidaeException(__LINE__.'Impossible de récupérer le token d\'écriture') ;
 				
-			$ch = curl_init();
+			$result = $this->request('/api/v002/metadata/'.$id.'/'.$noeud.'/',Array(
+				'token' => $access_token,
+				'CUSTOMREQUEST' => 'GET'
+			)) ;
 			
-			$curl_url = $this->url_api().'api/v002/metadata/'.$id.'/'.$noeud.'/' ;
-			curl_setopt($ch,CURLOPT_URL,$curl_url);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Authorization: Bearer ".$access_token));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-			curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-			
-			$result = curl_exec($ch);
-			
-			if (FALSE === $result) throw new \Exception(curl_error($ch), curl_errno($ch));
-			
-			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-			$header = substr($result, 0, $header_size);
-			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$curl_infos = curl_getinfo($ch) ;
-			$body = substr($result, $header_size) ;
-
-			if ( $http_code != 200 ) throw new \Exception('Retour http incorrect',$http_code) ;
-			return $result ;
+			if ( $result['code'] != 200 ) throw new ApidaeException('Retour http incorrect',ApidaeException::INVALID_HTTPCODE,Array(
+				'debug' => $this->debug,
+				'result' => $result
+			)) ;
+			return $result['body'] ;
 		}
 
 		/**
@@ -107,37 +96,23 @@
 			$clientId = isset($params['clientId']) ? $params['clientId'] : $this->clientId ;
 			$secret = isset($params['secret']) ? $params['secret'] : $this->secret ;
 
-			if ( $clientId == null ) throw new \Exception(__LINE__.':clientId non renseigné') ;
-			if ( $secret == null ) throw new \Exception(__LINE__.':secret non renseigné') ;
+			if ( $clientId == null ) throw new ApidaeException('clientId non renseigné',ApidaeException::MISSING_PARAMETER) ;
+			if ( $secret == null ) throw new ApidaeException('secret non renseigné',ApidaeException::MISSING_PARAMETER) ;
 
 			$access_token = $this->gimme_token($clientId,$secret) ;
-			if ( ! $access_token ) throw new \Exception(__LINE__.'Impossible de récupérer le token d\'écriture') ;
-			
-			$body = null ;
-			$http_code = null ;
+			if ( ! $access_token ) throw new ApidaeException(__LINE__.'Impossible de récupérer le token d\'écriture') ;
 
-			$ch = curl_init();
-			$curl_url = $this->url_api().'api/v002/metadata/'.$id.'/'.$noeud.'/' ;
-			curl_setopt($ch,CURLOPT_URL,$curl_url);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Authorization: Bearer ".$access_token));
-			curl_setopt($ch,CURLOPT_POSTFIELDS, $postfields);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-			// http://dev.apidae-tourisme.com/fr/documentation-technique/v2/oauth/authentification-avec-un-token-oauth2
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-			curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-			curl_setopt($ch, CURLOPT_HEADER, true) ;
+			$result = $this->request('/api/v002/metadata/'.$id.'/'.$noeud.'/',Array(
+				'token' => $access_token,
+				'POSTFIELDS' => $postfields,
+				'CUSTOMREQUEST' => 'PUT'
+			)) ;
 			
-			$result = curl_exec($ch);
-			if (FALSE === $result) throw new \Exception(curl_error($ch), curl_errno($ch));
+			if ( $result['code'] != 200 ) throw new ApidaeException('Retour http incorrect',ApidaeException::INVALID_HTTPCODE,Array(
+				'debug' => $this->debug,
+				'result' => $result
+			)) ;
 			
-			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-			$header = substr($result, 0, $header_size);
-			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$curl_infos = curl_getinfo($ch) ;
-			$body = substr($result, $header_size) ;
-			curl_close($ch) ;
-
-			if ( $http_code != 200 ) throw new \Exception('Retour http incorrect',$http_code) ;
 			return true ;
 		}
 
@@ -147,16 +122,13 @@
 			$clientId = isset($params['clientId']) ? $params['clientId'] : $this->clientId ;
 			$secret = isset($params['secret']) ? $params['secret'] : $this->secret ;
 
-			if ( $clientId == null ) throw new \Exception(__LINE__.': clientId non renseigné') ;
-			if ( $secret == null ) throw new \Exception(__LINE__.': secret non renseigné') ;
+			if ( $clientId == null ) throw new ApidaeException('clientId non renseigné',ApidaeException::MISSING_PARAMETER) ;
+			if ( $secret == null ) throw new ApidaeException('secret non renseigné',ApidaeException::MISSING_PARAMETER) ;
 
 			$access_token = $this->gimme_token($clientId,$secret) ;
-			if ( ! $access_token )throw new \Exception(__LINE__.'Impossible de récupérer le token d\'écriture') ;
-			
-			$body = null ;
-			$http_code = null ;
+			if ( ! $access_token ) throw new ApidaeException(__LINE__.'Impossible de récupérer le token d\'écriture') ;
 
-			$curl_url = $this->url_api().'api/v002/metadata/'.$id.'/'.$noeud.'/' ;
+			$curl_url = '/api/v002/metadata/'.$id.'/'.$noeud.'/' ;
 			if ( isset($params['targetType']) )
 			{
 				if ( ! in_array($params['targetType'],self::$targets) ) throw new \Exception('targetType not in '.implode(', ',self::targets)) ;
@@ -169,26 +141,15 @@
 				else $curl_url .= (int)$params['targetId'].'/' ;
 			}
 
-			$ch = curl_init();
-			curl_setopt($ch,CURLOPT_URL,$curl_url);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Authorization: Bearer ".$access_token));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
-			// http://dev.apidae-tourisme.com/fr/documentation-technique/v2/oauth/authentification-avec-un-token-oauth2
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-			curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
-			curl_setopt($ch, CURLOPT_HEADER, true) ;
+			$result = $this->request($curl_url,Array(
+				'token' => $access_token,
+				'CUSTOMREQUEST' => 'DELETE'
+			));
 			
-			$result = curl_exec($ch);
-			if (FALSE === $result) throw new \Exception(curl_error($ch), curl_errno($ch));
-			
-			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-			$header = substr($result, 0, $header_size);
-			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			$curl_infos = curl_getinfo($ch) ;
-			$body = substr($result, $header_size) ;
-			curl_close($ch) ;
-
-			if ( $http_code != 200 ) throw new \Exception('Retour http incorrect',$http_code) ;
+			if ( $result['code'] != 200 ) throw new ApidaeException('Retour http incorrect',ApidaeException::INVALID_HTTPCODE,Array(
+				'debug' => $this->debug,
+				'result' => $result	
+			)) ;
 			return true ;
 		}
 

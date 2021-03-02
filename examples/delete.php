@@ -9,10 +9,16 @@
     $ApidaeMetadata = new \PierreGranger\ApidaeMetadata(array_merge($configApidaeMetadata,Array('debug'=>true))) ;
     
     echo '<h1>Avant...</h1>' ;
-    echo '<pre>'.print_r($ApidaeMetadata->get(4683815,'test-pg'),true).'</pre>' ;
+    try {
+        echo '<pre>'.print_r($ApidaeMetadata->get(4683815,'test-pg'),true).'</pre>' ;
+    } catch ( Exception $e ) { echo $e ; }
 
     echo '<h1>Delete...</h1>' ;
-    try { $retour = $ApidaeMetadata->delete($offre,$noeud) ; } catch ( \Exception $e ) { echo '<pre>'.print_r($e,true).'</pre>' ; }
+    try {
+        $retour = $ApidaeMetadata->delete($offre,$noeud) ;
+    } catch ( Exception $e ) { echo $e ; }
 
     echo '<h1>Après...</h1>' ;
-    echo '<pre>'.print_r($ApidaeMetadata->get(4683815,'test-pg'),true).'</pre>' ;
+    try {
+        echo '<pre>'.print_r($ApidaeMetadata->get(4683815,'test-pg'),true).'</pre>' ;
+    } catch ( Exception $e ) { echo $e ; }

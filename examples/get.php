@@ -9,8 +9,11 @@
     $ApidaeMetadata = new \PierreGranger\ApidaeMetadata(array_merge($configApidaeMetadata,Array('debug'=>true,'timer'=>true))) ;
 
     $ApidaeMetadata->start(__FILE__) ;
-    $metadonnee = $ApidaeMetadata->get(4683815,'test-pg') ;
-    echo '<pre>'.print_r($metadonnee,true).'</pre>' ;
+    try {
+        $metadonnee = $ApidaeMetadata->get(4683815,'test-pg') ;
+        echo '<pre>'.print_r($metadonnee,true).'</pre>' ;
+    } catch ( Exception $e ) { echo $e ; }
+    
     $ApidaeMetadata->stop(__FILE__) ;
 
     $ApidaeMetadata->timer() ;
